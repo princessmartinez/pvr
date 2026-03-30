@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map & Weather</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul class="nav">
+                <li class="nav-item"><a class="active" href="#" data-section="map-section">Map</a></li>
+                <li class="nav-item"><a href="#" data-section="weather-section">Weather</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1 class="map-id">Location Map</h1>
+        <h1 class="weather-id" style="display: none;">Weather</h1>
+
+        <section id="map-section" class="section active">
+            <div class="map-section-container">
+                <div class="map-search">
+                    <input type="text" id="map-input" placeholder="Enter location name...">
+                    <button id="map-search-btn">Show on Map</button>
+                    <button id="my-location-btn">My Location</button>
+                </div>
+                <div class="map-container" id="map-container">
+                    <iframe id="main-map-iframe" width="100%" height="500" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <section id="weather-section" class="section" style="display: none; text-align: center;">
+            <div class="weather-container">
+                <div class="weather-card">
+                    <h2 id="city-name">--</h2>
+                    <div class="weather-icon" id="weather-icon">--</div>
+                    <div class="temperature" id="temperature">--°C</div>
+                    <div class="description" id="description">--</div>
+                    <div class="details">
+                        <div class="detail-item">
+                            <span>Humidity</span>
+                            <span id="humidity">--%</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Wind</span>
+                            <span id="wind">-- km/h</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>Pressure</span>
+                            <span id="pressure">-- hPa</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>UV Index</span>
+                            <span><span id="uv-index">--</span> <span id="uv-level">--</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="forecast-section">
+                    <h3>24-Hour Forecast</h3>
+                    <div class="forecast-container" id="forecast-container"></div>
+                </div>
+                <div class="daily-forecast-section">
+                    <h3>7-Day Forecast</h3>
+                    <div class="daily-forecast-container" id="daily-forecast-container"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>
