@@ -2,18 +2,6 @@ const fullscreen = document.getElementById("fullscreen");
 const fullscreenImg = document.getElementById("fullscreen-img");
 const closeBtn = document.querySelector(".fullscreen-close");
 
-function toggleMenu() {
-    document.querySelector(".navbar").classList.toggle("active");
-}
-
-document.querySelectorAll(".nav-item a").forEach(link => {
-    link.addEventListener("click", () => {
-        if (window.innerWidth <= 768) {
-            document.querySelector(".navbar").classList.remove("active");
-        }
-    });
-});
-
 document.querySelectorAll(".item img").forEach(img => {
     img.addEventListener("click", () => {
         fullscreenImg.src = img.src;

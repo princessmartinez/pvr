@@ -437,26 +437,7 @@ h1 {
 }
 
 /* Mobile Responsive Styles */
-.menu-toggle {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-    padding: 5px;
-}
-
-.menu-toggle span {
-    width: 25px;
-    height: 3px;
-    background-color: black;
-    border-radius: 2px;
-}
-
 @media (max-width: 768px) {
-    .menu-toggle {
-        display: flex;
-    }
-    
     header {
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         padding: 10px;
