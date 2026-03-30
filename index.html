@@ -26,75 +26,68 @@
     </header>
     <main>
         <section id="gallery-section" class="section">
-            <h1>Random Gallery</h1>
+            <h1>Cagayan Churches Gallery</h1>
             <div class="grid">
                 <div class="item">
-                    <img src="pics/image1.jpg" alt="Gallery image">
+                    <img src="pics/church/St. Peter Paul Parish Church, Tuguegarao.jpg" alt="St. Peter Paul Parish Church">
                 </div>
                 <div class="item item--large">
-                    <img src="pics/image2.jpg" alt="Gallery image">
+                    <img src="pics/church/St. Ignatius Cathedral, Tuguegarao.jpg" alt="St. Ignatius Cathedral">
                 </div>
                 <div class="item item--medium">
-                    <img src="pics/image3.jpg" alt="Gallery image">
+                    <img src="pics/church/Our Lady of the Pillar Church, Tuaid.jpg" alt="Our Lady of the Pillar Church">
                 </div>
                 <div class="item item--large">
-                    <img src="pics/image4.jpg" alt="Gallery image">
+                    <img src="pics/church/San Sebastian Cathedral, Aparri.jpg" alt="San Sebastian Cathedral">
                 </div>
                 <div class="item item--full">
-                    <img src="pics/image5.jpg" alt="Gallery image">
+                    <img src="pics/church/St. John the Baptist Church, Gattaran.png" alt="St. John the Baptist Church">
                 </div>
                 <div class="item item--medium">
-                    <img src="pics/image1.jpg" alt="Gallery image">
+                    <img src="pics/church/St. James the Greater Church, Solana.png" alt="St. James the Greater Church">
                 </div>
                 <div class="item item--large">
-                    <img src="pics/image2.jpg" alt="Gallery image">
+                    <img src="pics/church/St. Joseph Church, Baggao.png" alt="St. Joseph Church">
                 </div>
                 <div class="item">
-                    <img src="pics/image3.jpg" alt="Gallery image">
+                    <img src="pics/church/Our Lady of La Naval, Calayan.png" alt="Our Lady of La Naval">
                 </div>
                 <div class="item item--medium">
-                    <img src="pics/image4.jpg" alt="Gallery image">
+                    <img src="pics/church/St. Vincent Ferrer Church, Abulug.png" alt="St. Vincent Ferrer Church">
                 </div>
                 <div class="item item--large">
-                    <img src="pics/image5.jpg" alt="Gallery image">
+                    <img src="pics/church/St. Augustine Church, Iguig.png" alt="St. Augustine Church">
                 </div>
                 <div class="item">
-                    <img src="pics/image1.jpg" alt="Gallery image">
+                    <img src="pics/church/St. Michael the Archangel Church, Lal-lo.png" alt="St. Michael the Archangel Church">
                 </div>
                 <div class="item item--medium">
-                    <img src="pics/image2.jpg" alt="Gallery image">
+                    <img src="pics/church/San Lorenzo Ruiz Church, Claveria.png" alt="San Lorenzo Ruiz Church">
                 </div>
                 <div class="item item--medium">
-                    <img src="pics/image3.jpg" alt="Gallery image">
+                    <img src="pics/church/St. Nicholas Church, Camalan.png" alt="St. Nicholas Church">
                 </div>
                 <div class="item item--large">
-                    <img src="pics/image4.jpg" alt="Gallery image">
+                    <img src="pics/church/St. Francis of Assisi Church, Enrile.png" alt="St. Francis of Assisi Church">
                 </div>
                 <div class="item">
-                    <img src="pics/image5.jpg" alt="Gallery image">
+                    <img src="pics/church/St. Rose of Lima Church, San Mariano.png" alt="St. Rose of Lima Church">
                 </div>
                 <div class="item">
-                    <img src="pics/image6.png" alt="">
+                    <img src="pics/church/St. James Parish Church, Allacapan.png" alt="St. James Parish Church">
                 </div>
                 <div class="item">
-                    <img src="pics/image.png" alt="">
+                    <img src="pics/church/Our Lady of Guadalupe Church, Lasam.png" alt="Our Lady of Guadalupe Church">
                 </div>
-
-                <!-- want to add more pictures
-
-                Just coppy below and change the picture name
-
                 <div class="item">
-                    <img src="pics/image.png" alt="">
+                    <img src="pics/church/St. Anthony of Padua Church, Piat.png" alt="St. Anthony of Padua Church">
                 </div>
-
-                put below
-                -->
-
                 <div class="item">
-                    <img src="pics/OIP (7).jpg" alt="">
+                    <img src="pics/church/St. Jerome Church, Rizal.png" alt="St. Jerome Church">
                 </div>
-
+                <div class="item">
+                    <img src="pics/church/Immaculate Conception Cathedral, Lallo.png" alt="Immaculate Conception Cathedral">
+                </div>
             </div>
         </section>
 
@@ -187,7 +180,19 @@
 
         <div id="fullscreen" class="fullscreen">
             <button class="fullscreen-close">&times;</button>
-            <img id="fullscreen-img" src="" alt="Fullscreen">
+            <div class="zoom-controls">
+                <button id="zoom-in">+</button>
+                <button id="zoom-out">-</button>
+            </div>
+            <button class="nav-btn nav-prev" id="prev-btn">&lt;</button>
+            <button class="nav-btn nav-next" id="next-btn">&gt;</button>
+            <div class="fullscreen-content">
+                <img id="fullscreen-img" src="" alt="Fullscreen">
+            </div>
+            <div class="fullscreen-info">
+                <h2 id="fullscreen-church-name"></h2>
+                <p id="fullscreen-church-history"></p>
+            </div>
         </div>
     </main>
 

@@ -160,18 +160,13 @@ h1 {
     height: 100%;
     background: rgba(0, 0, 0, 0.95);
     z-index: 1000;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
 .fullscreen.active {
     display: flex;
-}
-
-.fullscreen img {
-    max-width: 90%;
-    max-height: 90%;
-    object-fit: contain;
 }
 
 .fullscreen-close {
@@ -184,6 +179,103 @@ h1 {
     font-size: 40px;
     cursor: pointer;
     z-index: 1001;
+}
+
+.zoom-controls {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    display: flex;
+    gap: 10px;
+    z-index: 1001;
+}
+
+.zoom-controls button {
+    width: 45px;
+    height: 45px;
+    font-size: 24px;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.zoom-controls button:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+    z-index: 1002;
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.nav-prev {
+    left: 20px;
+}
+
+.nav-next {
+    right: 20px;
+}
+
+.fullscreen-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 90%;
+    max-height: 55%;
+    overflow: hidden;
+    cursor: zoom-in;
+    margin-bottom: 40px;
+}
+
+.fullscreen-content img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.fullscreen-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px 40px;
+    max-height: 40%;
+    overflow-y: auto;
+    text-align: center;
+    z-index: 1002;
+}
+
+.fullscreen-info h2 {
+    color: #fff;
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+}
+
+.fullscreen-info p {
+    color: #ccc;
+    margin: 0;
+    line-height: 1.6;
 }
 
 .weather-container {

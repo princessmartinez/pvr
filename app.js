@@ -1,23 +1,163 @@
 const fullscreen = document.getElementById("fullscreen");
 const fullscreenImg = document.getElementById("fullscreen-img");
 const closeBtn = document.querySelector(".fullscreen-close");
+const zoomInBtn = document.getElementById("zoom-in");
+const zoomOutBtn = document.getElementById("zoom-out");
+const fullscreenContent = document.querySelector(".fullscreen-content");
+const fullscreenChurchName = document.getElementById("fullscreen-church-name");
+const fullscreenChurchHistory = document.getElementById("fullscreen-church-history");
+const prevBtn = document.getElementById("prev-btn");
+const nextBtn = document.getElementById("next-btn");
 
-document.querySelectorAll(".item img").forEach(img => {
+let cachedLocation = null;
+let currentZoom = 1;
+let currentImageIndex = 0;
+let churchImages = [];
+const MIN_ZOOM = 0.5;
+const MAX_ZOOM = 3;
+const ZOOM_STEP = 0.25;
+
+const churchGalleryData = {
+    "pics/church/St. Peter Paul Parish Church, Tuguegarao.jpg": { name: "St. Peter Paul Parish Church", location: "Tuguegarao", history: "St. Peter Paul Parish Church, commonly known as the Baculod Church, is one of the oldest parishes in Cagayan. Established in 1596, it served as the original seat of the diocese before the construction of St. Ignatius Cathedral. The church is famous for its centuries-old bells and the miraculous image of Our Lady of the Pillar." },
+    "pics/church/St. Ignatius Cathedral, Tuguegarao.jpg": { name: "St. Ignatius Cathedral", location: "Tuguegarao", history: "St. Ignatius Cathedral, also known as the Tuguegarao Cathedral, is the seat of the Archdiocese of Tuguegarao. It was founded in 1604 by Spanish missionaries and is one of the oldest churches in Northern Luzon. The cathedral features a unique architectural blend of Spanish colonial and Filipino styles, with its iconic red brick facade making it stand out among other churches in the region." },
+    "pics/church/Our Lady of the Pillar Church, Tuaid.jpg": { name: "Our Lady of the Pillar Church", location: "Tuao", history: "Our Lady of the Pillar Church in Tuao is renowned as the oldest church in Cagayan Province. Founded in 1585, it houses the revered image of Our Lady of the Pillar, believed to have been brought by Spanish missionaries. The church features a beautiful baroque altar and is a popular pilgrimage site for devotees." },
+    "pics/church/San Sebastian Cathedral, Aparri.jpg": { name: "San Sebastian Cathedral", location: "Aparri", history: "San Sebastian Cathedral in Aparri is the seat of the Diocese of Aparri. Built in 1612, it is dedicated to St. Sebastian, the martyr. The cathedral played a significant role during the Spanish colonial period as a center for evangelization in the northernmost part of the Philippines. Its towering spire is visible from miles away." },
+    "pics/church/St. John the Baptist Church, Gattaran.png": { name: "St. John the Baptist Church", location: "Gattaran", history: "St. John the Baptist Church in Gattaran was established in 1614 by Spanish Dominican missionaries. The church is known for its impressive stone architecture and houses ancient religious artifacts. The annual feast of St. John the Baptist draws thousands of pilgrims who participate in the traditional fluvial procession." },
+    "pics/church/St. James the Greater Church, Solana.png": { name: "St. James the Greater Church", location: "Solana", history: "St. James the Greater Church in Solana, formerly known as the Church of Calasian, was founded in 1734. The church is famous for its life-sized image of St. James the Greater, also known as Santiago Matamoros. Every year, the town celebrates the Festivity of the Black Nazarene in honor of the saint." },
+    "pics/church/St. Joseph Church, Baggao.png": { name: "St. Joseph Church", location: "Baggao", history: "St. Joseph Church in Baggao was established in 1605 and is one of the oldest churches in Cagayan Valley. The church is renowned for its beautiful stained glass windows depicting the life of St. Joseph. It serves as the spiritual center for the municipality and houses the venerated image of Our Lady of the Rosary." },
+    "pics/church/Our Lady of La Naval, Calayan.png": { name: "Our Lady of La Naval", location: "Calayan", history: "Our Lady of La Naval Church in Calayan Island is dedicated to the Virgin of the Navy, the patroness of seafarers. Founded in 1614, the church was built to serve the spiritual needs of the island's fishing communities. The annual town fiesta honors Our Lady of La Naval with colorful processions and traditional celebrations." },
+    "pics/church/St. Vincent Ferrer Church, Abulug.png": { name: "St. Vincent Ferrer Church", location: "Abulug", history: "St. Vincent Ferrer Church in Abulug was founded in 1734 and is dedicated to St. Vincent Ferrer, the famous Dominican preacher. The church features a unique clock tower that has been telling time for over a century. The annual fiesta celebrates the feast day of St. Vincent Ferrer with traditional Ilocano dances and songs." },
+    "pics/church/St. Augustine Church, Iguig.png": { name: "St. Augustine Church", location: "Iguig", history: "St. Augustine Church in Iguig, also known as the Iguig Church, was established in 1604. It is famous for its exquisite altar made of carved wood and ivory. The church houses the miraculous image of St. Augustine, which draws devotees from across the region. The church's bell tower offers a panoramic view of the Cagayan River valley." },
+    "pics/church/St. Michael the Archangel Church, Lal-lo.png": { name: "St. Michael the Archangel Church", location: "Lal-lo", history: "St. Michael the Archangel Church in Lal-lo was founded in 1585, making it one of the oldest churches in the Philippines. The church is built on the site where the first Mass in Cagayan was celebrated. Its ancient architecture features thick walls and a coral stone facade. The church is home to the revered image of St. Michael the Archangel." },
+    "pics/church/San Lorenzo Ruiz Church, Claveria.png": { name: "San Lorenzo Ruiz Church", location: "Claveria", history: "San Lorenzo Ruiz Church in Claveria was established in 1660 and was originally dedicated to St. Andrew. It was rededicated to San Lorenzo Ruiz, the first Filipino saint, in 1981. The church features a modern architectural design while maintaining its historical significance as a center of faith in the municipality." },
+    "pics/church/St. Nicholas Church, Camalan.png": { name: "St. Nicholas Church", location: "Camalaniugan", history: "St. Nicholas Church in Camalaniugan was founded in 1620 by Spanish missionaries. The church is known for its beautiful ceiling murals depicting biblical scenes. It houses the ancient image of St. Nicholas of Tolentine, which is believed to have miraculous powers. The annual town fiesta features traditional folk dances." },
+    "pics/church/St. Francis of Assisi Church, Enrile.png": { name: "St. Francis of Assisi Church", location: "Enrile", history: "St. Francis of Assisi Church in Enrile was established in 1646. The church is famous for its unique architecture featuring a blend of Spanish and native Filipino design elements. It houses the venerated image of St. Francis of Assisi, and the church's gardens contain ancient religious sculptures." },
+    "pics/church/St. Rose of Lima Church, San Mariano.png": { name: "St. Rose of Lima Church", location: "San Mariano", history: "St. Rose of Lima Church in San Mariano was founded in 1726. Dedicated to St. Rose of Lima, the first saint of the Americas, the church features beautiful stained glass windows depicting her life. The annual feast day celebration includes processions and traditional cooking of local delicacies." },
+    "pics/church/St. James Parish Church, Allacapan.png": { name: "St. James Parish Church", location: "Allacapan", history: "St. James Parish Church in Allacapan was established in 1840. The church is dedicated to St. James the Greater and features a majestic bell tower. The annual fiesta celebrates the feast day with traditional Ilocano performances and religious activities." },
+    "pics/church/Our Lady of Guadalupe Church, Lasam.png": { name: "Our Lady of Guadalupe Church", location: "Lasam", history: "Our Lady of Guadalupe Church in Lasam was founded in 1734. It is dedicated to Our Lady of Guadalupe, the patroness of the Americas. The church features a beautiful retablo mayor and houses the miraculous image of the Virgin. The annual pilgrimage attracts devotees seeking blessings." },
+    "pics/church/St. Anthony of Padua Church, Piat.png": { name: "Basilica Minore of Our Lady of Piat", location: "Piat", history: "St. Anthony of Padua Church in Piat is known as the shrine of the Our Lady of Piat, whose image was brought to the Philippines in 1604. The church is a major pilgrimage site, with thousands of devotees visiting each year to seek the intercession of the Virgin Mary. The feast day celebration is one of the largest religious gatherings in Cagayan." },
+    "pics/church/St. Jerome Church, Rizal.png": { name: "St. Jerome Church", location: "Rizal", history: "St. Jerome Church in Rizal was established in 1856. The church is dedicated to St. Jerome, the patron saint of translators and scholars. It features a unique architectural design with arched ceilings and coral stone walls. The church houses ancient liturgical books and religious artifacts." },
+    "pics/church/Immaculate Conception Cathedral, Lallo.png": { name: "Immaculate Conception Cathedral", location: "Lallo", history: "Immaculate Conception Cathedral in Lallo was founded in 1596 and served as the first cathedral of the Diocese of Nueva Segovia. It is one of the oldest churches in Northern Luzon, featuring a magnificent Spanish colonial architecture with thick adobe walls. The cathedral houses the venerated image of the Immaculate Conception and is a significant historical landmark." }
+};
+
+function getLocationWithCache(successCallback, errorCallback) {
+    if (cachedLocation) {
+        successCallback(cachedLocation);
+        return;
+    }
+    
+    if (!navigator.geolocation) {
+        errorCallback();
+        return;
+    }
+    
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            cachedLocation = {
+                lat: position.coords.latitude,
+                lon: position.coords.longitude
+            };
+            successCallback(cachedLocation);
+        },
+        (error) => {
+            console.error("Geolocation error:", error);
+            errorCallback();
+        }
+    );
+}
+
+function showFullscreenImage(index) {
+    if (index < 0) index = churchImages.length - 1;
+    if (index >= churchImages.length) index = 0;
+    currentImageIndex = index;
+    
+    const img = churchImages[index];
+    fullscreenImg.src = img.src;
+    fullscreenImg.style.transform = "scale(1)";
+    currentZoom = 1;
+    
+    const imgAlt = img.alt;
+    const imgSrc = img.src.includes("pics/church/") ? img.src : img.src;
+    let churchData = null;
+    
+    for (const [key, value] of Object.entries(churchGalleryData)) {
+        if (imgSrc.includes(key) || imgAlt.includes(value.name)) {
+            churchData = value;
+            break;
+        }
+    }
+    
+    if (churchData) {
+        fullscreenChurchName.textContent = churchData.name + ", " + churchData.location;
+        fullscreenChurchHistory.textContent = churchData.history;
+    } else {
+        fullscreenChurchName.textContent = imgAlt || "Gallery Image";
+        fullscreenChurchHistory.textContent = "";
+    }
+}
+
+document.querySelectorAll(".item img").forEach((img, index) => {
     img.addEventListener("click", () => {
-        fullscreenImg.src = img.src;
+        churchImages = Array.from(document.querySelectorAll(".item img"));
+        currentImageIndex = churchImages.findIndex(i => i.src === img.src);
+        showFullscreenImage(currentImageIndex);
         fullscreen.classList.add("active");
     });
+});
+
+prevBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    showFullscreenImage(currentImageIndex - 1);
+});
+
+nextBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    showFullscreenImage(currentImageIndex + 1);
 });
 
 closeBtn.addEventListener("click", () => {
     fullscreen.classList.remove("active");
     fullscreenImg.src = "";
+    fullscreenChurchName.textContent = "";
+    fullscreenChurchHistory.textContent = "";
+    churchImages = [];
 });
 
 fullscreen.addEventListener("click", (e) => {
     if (e.target === fullscreen) {
         fullscreen.classList.remove("active");
         fullscreenImg.src = "";
+        fullscreenChurchName.textContent = "";
+        fullscreenChurchHistory.textContent = "";
+        churchImages = [];
+    }
+});
+
+zoomInBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (currentZoom < MAX_ZOOM) {
+        currentZoom = Math.min(MAX_ZOOM, currentZoom + ZOOM_STEP);
+        fullscreenImg.style.transform = `scale(${currentZoom})`;
+    }
+});
+
+zoomOutBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (currentZoom > MIN_ZOOM) {
+        currentZoom = Math.max(MIN_ZOOM, currentZoom - ZOOM_STEP);
+        fullscreenImg.style.transform = `scale(${currentZoom})`;
+    }
+});
+
+fullscreenContent.addEventListener("click", (e) => {
+    if (e.target === fullscreenImg) {
+        if (currentZoom < MAX_ZOOM) {
+            currentZoom = Math.min(MAX_ZOOM, currentZoom + 0.5);
+            fullscreenImg.style.transform = `scale(${currentZoom})`;
+        } else {
+            currentZoom = 1;
+            fullscreenImg.style.transform = `scale(${currentZoom})`;
+        }
     }
 });
 
@@ -81,16 +221,29 @@ function fetchWeatherByCoords(lat, lon, locationName = null) {
             if (locationName) {
                 data.location_name = locationName;
             } else {
-                // Check if these are the user's specific coordinates for Barsat East Baggao Cagayan
-                const isUserLoc = (Math.abs(lat - 17.94) < 0.1 && Math.abs(lon - 121.88) < 0.1);
-                data.location_name = isUserLoc ? "Barsat East Baggao Cagayan" : "Current Location";
+                const reverseGeoUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
+                return fetch(reverseGeoUrl)
+                    .then(res => res.json())
+                    .then(geoData => {
+                        if (geoData && geoData.address) {
+                            const city = geoData.address.city || geoData.address.town || geoData.address.village || geoData.address.municipality || geoData.address.county || geoData.address.state;
+                            const country = geoData.address.country;
+                            data.location_name = city ? `${city}, ${country}` : `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+                        } else {
+                            data.location_name = `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+                        }
+                        displayWeather(data);
+                        displayHourlyForecast(data);
+                    });
             }
             displayWeather(data);
             displayHourlyForecast(data);
         })
         .catch(error => {
             console.error("Error fetching weather:", error);
-            alert("Error fetching weather data");
+            data.location_name = "Location unavailable";
+            displayWeather(data);
+            displayHourlyForecast(data);
         });
 }
 
@@ -161,24 +314,27 @@ function updateMap(location, showMarker = false) {
 }
 
 function getMyLocation() {
-    if (navigator.geolocation) {
-        myLocationBtn.textContent = "Locating...";
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                mainMapIframe.src = `https://maps.google.com/maps?q=${lat},${lon}&hl=en&z=15&output=embed`;
-                myLocationBtn.textContent = "My Location";
-            },
-            (error) => {
-                console.error("Error getting location:", error);
-                alert("Unable to retrieve your location. Please check your browser permissions.");
-                myLocationBtn.textContent = "My Location";
-            }
-        );
-    } else {
+    if (!navigator.geolocation) {
         alert("Geolocation is not supported by your browser.");
+        return;
     }
+    
+    myLocationBtn.textContent = "Locating...";
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            cachedLocation = {
+                lat: position.coords.latitude,
+                lon: position.coords.longitude
+            };
+            mainMapIframe.src = `https://maps.google.com/maps?q=${cachedLocation.lat},${cachedLocation.lon}&hl=en&z=15&output=embed`;
+            myLocationBtn.textContent = "My Location";
+        },
+        (error) => {
+            console.error("Error getting location:", error);
+            alert("Unable to retrieve your location. Please allow location access in your browser settings.");
+            myLocationBtn.textContent = "My Location";
+        }
+    );
 }
 
 mapSearchBtn.addEventListener("click", () => {
@@ -258,43 +414,38 @@ document.querySelectorAll(".nav a").forEach(link => {
         document.getElementById(sectionId).style.display = "block";
 
         if (sectionId === "weather-section") {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-                        fetchWeatherByCoords(lat, lon);
-                    },
-                    () => {
-                        fetchWeatherByCity("Manila");
-                    }
-                );
-            } else {
-                fetchWeatherByCity("Manila");
-            }
+            getLocationWithCache(
+                (loc) => fetchWeatherByCoords(loc.lat, loc.lon),
+                () => fetchWeatherByCity("Baggao")
+            );
+        }
+
+        if (sectionId === "map-section") {
+            getLocationWithCache(
+                (loc) => mainMapIframe.src = `https://maps.google.com/maps?q=${loc.lat},${loc.lon}&hl=en&z=15&output=embed`,
+                () => updateMap("Baggao")
+            );
         }
     });
 });
 
-// Initialize with user's current location if possible, else use Manila as fallback
+// Check if geolocation will work
+if (navigator.geolocation && location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+    console.warn("Geolocation works best on HTTPS or localhost");
+}
+
+// Initialize with user's current location if possible, else use Baggao as fallback
 function init() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                fetchWeatherByCoords(lat, lon);
-                mainMapIframe.src = `https://maps.google.com/maps?q=${lat},${lon}&hl=en&z=15&output=embed`;
-            },
-            () => {
-                fetchWeatherByCity("Manila");
-                updateMap("Manila");
-            }
-        );
-    } else {
-        fetchWeatherByCity("Manila");
-        updateMap("Manila");
-    }
+    getLocationWithCache(
+        (loc) => {
+            fetchWeatherByCoords(loc.lat, loc.lon);
+            mainMapIframe.src = `https://maps.google.com/maps?q=${loc.lat},${loc.lon}&hl=en&z=15&output=embed`;
+        },
+        () => {
+            fetchWeatherByCity("Baggao");
+            updateMap("Baggao");
+        }
+    );
 }
 
 init();
