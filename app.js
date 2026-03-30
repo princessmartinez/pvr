@@ -256,6 +256,23 @@ document.querySelectorAll(".nav a").forEach(link => {
             section.style.display = "none";
         });
         document.getElementById(sectionId).style.display = "block";
+
+        if (sectionId === "weather-section") {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        fetchWeatherByCoords(lat, lon);
+                    },
+                    () => {
+                        fetchWeatherByCity("Manila");
+                    }
+                );
+            } else {
+                fetchWeatherByCity("Manila");
+            }
+        }
     });
 });
 
